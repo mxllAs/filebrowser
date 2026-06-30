@@ -1,66 +1,67 @@
 <template>
-  <div class="card floating" id="share">
-    <div class="card-title">
-      <h2>{{ $t("buttons.share") }}</h2>
-    </div>
+  <div id="share">
+    <h3 class="text-lg font-semibold">{{ $t("buttons.share") }}</h3>
 
     <template v-if="listing">
-      <div class="card-content">
-        <table>
-          <tr>
-            <th>#</th>
-            <th>{{ $t("settings.shareDuration") }}</th>
-            <th></th>
-            <th></th>
-            <th></th>
-          </tr>
-
-          <tr v-for="link in links" :key="link.hash">
-            <td>{{ link.hash }}</td>
-            <td>
-              <template v-if="link.expire !== 0">{{
-                humanTime(link.expire)
-              }}</template>
-              <template v-else>{{ $t("permanent") }}</template>
-            </td>
-            <td class="small">
-              <button
-                class="action"
-                :aria-label="$t('buttons.copyToClipboard')"
-                :title="$t('buttons.copyToClipboard')"
-                @click="copyToClipboard(buildLink(link))"
-              >
-                <i class="material-icons">content_paste</i>
-              </button>
-            </td>
-            <td class="small">
-              <button
-                class="action"
-                :aria-label="$t('buttons.copyDownloadLinkToClipboard')"
-                :title="$t('buttons.copyDownloadLinkToClipboard')"
-                :disabled="!!link.hasPassword"
-                @click="copyToClipboard(buildDownloadLink(link))"
-              >
-                <i class="material-icons">content_paste_go</i>
-              </button>
-            </td>
-            <td class="small">
-              <button
-                class="action"
-                @click="deleteLink($event, link)"
-                :aria-label="$t('buttons.delete')"
-                :title="$t('buttons.delete')"
-              >
-                <i class="material-icons">delete</i>
-              </button>
-            </td>
-          </tr>
+      <div class="overflow-x-auto py-4">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>{{ $t("settings.shareDuration") }}</th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="link in links" :key="link.hash">
+              <td>{{ link.hash }}</td>
+              <td>
+                <template v-if="link.expire !== 0">{{
+                  humanTime(link.expire)
+                }}</template>
+                <template v-else>{{ $t("permanent") }}</template>
+              </td>
+              <td>
+                <button
+                  class="btn btn-ghost btn-xs btn-square"
+                  :aria-label="$t('buttons.copyToClipboard')"
+                  :title="$t('buttons.copyToClipboard')"
+                  @click="copyToClipboard(buildLink(link))"
+                >
+                  <i class="material-icons">content_paste</i>
+                </button>
+              </td>
+              <td>
+                <button
+                  class="btn btn-ghost btn-xs btn-square"
+                  :aria-label="$t('buttons.copyDownloadLinkToClipboard')"
+                  :title="$t('buttons.copyDownloadLinkToClipboard')"
+                  :disabled="!!link.hasPassword"
+                  @click="copyToClipboard(buildDownloadLink(link))"
+                >
+                  <i class="material-icons">content_paste_go</i>
+                </button>
+              </td>
+              <td>
+                <button
+                  class="btn btn-ghost btn-xs btn-square"
+                  @click="deleteLink($event, link)"
+                  :aria-label="$t('buttons.delete')"
+                  :title="$t('buttons.delete')"
+                >
+                  <i class="material-icons">delete</i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
 
-      <div class="card-action">
+      <div class="modal-action">
         <button
-          class="button button--flat button--grey"
+          class="btn btn-ghost btn-sm"
           @click="closeHovers"
           :aria-label="$t('buttons.close')"
           :title="$t('buttons.close')"
@@ -70,7 +71,7 @@
         </button>
         <button
           id="focus-prompt"
-          class="button button--flat button--blue"
+          class="btn btn-ghost btn-sm text-primary"
           @click="() => switchListing()"
           :aria-label="$t('buttons.new')"
           :title="$t('buttons.new')"
@@ -82,43 +83,47 @@
     </template>
 
     <template v-else>
-      <div class="card-content">
-        <p>{{ $t("settings.shareDuration") }}</p>
-        <div class="input-group input">
-          <vue-number-input
-            center
-            controls
-            size="small"
-            :max="2147483647"
-            :min="0"
-            @keyup.enter="submit"
-            v-model="time"
-            tabindex="1"
-          />
-          <select
-            class="right"
-            v-model="unit"
-            :aria-label="$t('time.unit')"
-            tabindex="2"
-          >
-            <option value="seconds">{{ $t("time.seconds") }}</option>
-            <option value="minutes">{{ $t("time.minutes") }}</option>
-            <option value="hours">{{ $t("time.hours") }}</option>
-            <option value="days">{{ $t("time.days") }}</option>
-          </select>
+      <div class="py-4 space-y-4">
+        <div>
+          <p class="mb-2">{{ $t("settings.shareDuration") }}</p>
+          <div class="input input-bordered flex items-center justify-center">
+            <vue-number-input
+              center
+              controls
+              size="small"
+              :max="2147483647"
+              :min="0"
+              @keyup.enter="submit"
+              v-model="time"
+              tabindex="1"
+            />
+            <select
+              class="select select-ghost select-sm"
+              v-model="unit"
+              :aria-label="$t('time.unit')"
+              tabindex="2"
+            >
+              <option value="seconds">{{ $t("time.seconds") }}</option>
+              <option value="minutes">{{ $t("time.minutes") }}</option>
+              <option value="hours">{{ $t("time.hours") }}</option>
+              <option value="days">{{ $t("time.days") }}</option>
+            </select>
+          </div>
         </div>
-        <p>{{ $t("prompts.optionalPassword") }}</p>
-        <input
-          class="input input--block"
-          type="password"
-          v-model.trim="password"
-          tabindex="3"
-        />
+        <div>
+          <p class="mb-2">{{ $t("prompts.optionalPassword") }}</p>
+          <input
+            class="input input-bordered w-full"
+            type="password"
+            v-model.trim="password"
+            tabindex="3"
+          />
+        </div>
       </div>
 
-      <div class="card-action">
+      <div class="modal-action">
         <button
-          class="button button--flat button--grey"
+          class="btn btn-ghost btn-sm"
           @click="() => switchListing()"
           :aria-label="$t('buttons.cancel')"
           :title="$t('buttons.cancel')"
@@ -128,7 +133,7 @@
         </button>
         <button
           id="focus-prompt"
-          class="button button--flat button--blue"
+          class="btn btn-ghost btn-sm text-primary"
           @click="submit"
           :aria-label="$t('buttons.share')"
           :title="$t('buttons.share')"

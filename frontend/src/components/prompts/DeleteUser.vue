@@ -1,13 +1,11 @@
 <template>
-  <div class="card floating">
-    <div class="card-content">
-      <p>{{ t("prompts.deleteUser") }}</p>
-    </div>
+  <div>
+    <p class="py-4">{{ t("prompts.deleteUser") }}</p>
 
-    <div class="card-action">
+    <div class="modal-action">
       <button
         id="focus-prompt"
-        class="button button--flat button--grey"
+        class="btn btn-ghost btn-sm"
         @click="layoutStore.closeHovers"
         :aria-label="t('buttons.cancel')"
         :title="t('buttons.cancel')"
@@ -16,7 +14,7 @@
         {{ t("buttons.cancel") }}
       </button>
       <button
-        class="button button--flat"
+        class="btn btn-ghost btn-sm text-primary"
         @click="layoutStore.currentPrompt?.confirm"
         tabindex="2"
       >

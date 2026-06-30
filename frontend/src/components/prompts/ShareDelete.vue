@@ -1,12 +1,11 @@
 <template>
-  <div class="card floating">
-    <div class="card-content">
-      <p>{{ $t("prompts.deleteMessageShare", { path: "" }) }}</p>
-    </div>
-    <div class="card-action">
+  <div>
+    <p class="py-4">{{ $t("prompts.deleteMessageShare", { path: "" }) }}</p>
+
+    <div class="modal-action">
       <button
         @click="closeHovers"
-        class="button button--flat button--grey"
+        class="btn btn-ghost btn-sm"
         :aria-label="$t('buttons.cancel')"
         :title="$t('buttons.cancel')"
         tabindex="2"
@@ -16,7 +15,7 @@
       <button
         id="focus-prompt"
         @click="submit"
-        class="button button--flat button--red"
+        class="btn btn-ghost btn-sm text-error"
         :aria-label="$t('buttons.delete')"
         :title="$t('buttons.delete')"
         tabindex="1"

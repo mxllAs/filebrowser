@@ -81,6 +81,8 @@
       </template>
     </header-bar>
 
+    <breadcrumbs base="/files" />
+
     <div
       v-if="isMobile"
       id="file-selection"
@@ -353,6 +355,7 @@ import { throttle } from "lodash-es";
 import { Base64 } from "js-base64";
 
 import HeaderBar from "@/components/header/HeaderBar.vue";
+import Breadcrumbs from "@/components/Breadcrumbs.vue";
 import Action from "@/components/header/Action.vue";
 import Search from "@/components/Search.vue";
 import Item from "@/components/files/ListingItem.vue";

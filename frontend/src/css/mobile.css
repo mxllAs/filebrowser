@@ -109,28 +109,30 @@
   #file-selection .action span {
     display: none;
   }
-  nav {
+  nav.sidebar-nav {
     top: 0;
-    z-index: 99999;
-    background: var(--surfaceSecondary);
+    left: 0;
     height: 100%;
     width: 16em;
+    z-index: 99999;
+    background: var(--surfaceSecondary);
     box-shadow: 0 0 5px var(--borderPrimary);
-    transition: 0.1s ease left;
-    left: -17em;
+    transform: translateX(-100%);
+    transition: transform 0.1s ease;
   }
 
-  html[dir="rtl"] nav {
-    left: unset;
-    right: -17em;
-  }
-  nav.active {
-    left: 0;
-  }
-
-  html[dir="rtl"] nav.active {
+  html[dir="rtl"] nav.sidebar-nav {
     left: unset;
     right: 0;
+    transform: translateX(100%);
+  }
+
+  nav.sidebar-nav.active {
+    transform: translateX(0);
+  }
+
+  html[dir="rtl"] nav.sidebar-nav.active {
+    transform: translateX(0);
   }
 
   .shell__divider {

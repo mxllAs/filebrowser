@@ -1,46 +1,82 @@
 <template>
-  <div id="login" :class="{ recaptcha: recaptcha }">
-    <form @submit="submit">
-      <img :src="logoURL" alt="File Browser" />
-      <h1>{{ name }}</h1>
-      <p v-if="reason != null" class="logout-message">
-        {{ t(`login.logout_reasons.${reason}`) }}
-      </p>
-      <div v-if="error !== ''" class="wrong">{{ error }}</div>
+  <div
+    id="login"
+    :class="{ recaptcha: recaptcha }"
+    class="h-screen w-full fixed top-0 left-0 flex items-center justify-center overflow-hidden bg-base-200"
+  >
+    <!-- background blobs for glassmorphism effect -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
 
-      <input
-        autofocus
-        class="input input--block"
-        type="text"
-        autocapitalize="off"
-        v-model="username"
-        :placeholder="t('login.username')"
-      />
-      <input
-        class="input input--block"
-        type="password"
-        v-model="password"
-        :placeholder="t('login.password')"
-      />
-      <input
-        class="input input--block"
-        v-if="createMode"
-        type="password"
-        v-model="passwordConfirm"
-        :placeholder="t('login.passwordConfirm')"
-      />
+    <div
+      class="card w-full max-w-sm bg-base-100/75 backdrop-blur-[30px] shadow-2xl border border-base-content/5 z-10 animate-[cardAppear_.8s_cubic-bezier(0.16,1,0.3,1)]"
+    >
+      <div class="card-body gap-5 p-10">
+        <div class="flex justify-center">
+          <div
+            class="flex items-center justify-center w-18 h-18 rounded-2xl bg-base-100 border border-base-content/5 shadow-lg p-3"
+          >
+            <img
+              :src="logoURL"
+              alt="File Browser"
+              class="w-full h-full object-contain"
+            />
+          </div>
+        </div>
 
-      <div v-if="recaptcha" id="recaptcha"></div>
-      <input
-        class="button button--block"
-        type="submit"
-        :value="createMode ? t('login.signup') : t('login.submit')"
-      />
+        <h1 class="text-2xl font-bold text-center tracking-tight -mt-1">
+          {{ name }}
+        </h1>
 
-      <p @click="toggleMode" v-if="signup">
-        {{ createMode ? t("login.loginInstead") : t("login.createAnAccount") }}
-      </p>
-    </form>
+        <p v-if="reason != null" class="alert alert-warning py-2 text-sm">
+          {{ t(`login.logout_reasons.${reason}`) }}
+        </p>
+        <div v-if="error !== ''" class="alert alert-error py-2 text-sm">
+          {{ error }}
+        </div>
+
+        <form @submit="submit" class="flex flex-col gap-4">
+          <input
+            autofocus
+            class="input input-bordered w-full"
+            type="text"
+            autocapitalize="off"
+            v-model="username"
+            :placeholder="t('login.username')"
+          />
+          <input
+            class="input input-bordered w-full"
+            type="password"
+            v-model="password"
+            :placeholder="t('login.password')"
+          />
+          <input
+            v-if="createMode"
+            class="input input-bordered w-full"
+            type="password"
+            v-model="passwordConfirm"
+            :placeholder="t('login.passwordConfirm')"
+          />
+
+          <div v-if="recaptcha" id="recaptcha"></div>
+
+          <button type="submit" class="btn btn-neutral w-full mt-1">
+            {{ createMode ? t("login.signup") : t("login.submit") }}
+          </button>
+        </form>
+
+        <p
+          v-if="signup"
+          @click="toggleMode"
+          class="text-center text-sm text-primary cursor-pointer hover:underline"
+        >
+          {{
+            createMode ? t("login.loginInstead") : t("login.createAnAccount")
+          }}
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 

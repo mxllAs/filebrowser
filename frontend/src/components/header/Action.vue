@@ -1,8 +1,17 @@
 <template>
-  <button @click="action" :aria-label="label" :title="label" class="action">
-    <i class="material-icons">{{ icon }}</i>
-    <span>{{ label }}</span>
-    <span v-if="counter && counter > 0" class="counter">{{ counter }}</span>
+  <button
+    @click="action"
+    :aria-label="label"
+    :title="label"
+    class="action btn btn-ghost btn-sm gap-1.5 h-auto min-h-0 px-2.5 py-1.5"
+  >
+    <i class="material-icons text-lg">{{ icon }}</i>
+    <span class="hidden md:inline text-sm font-medium">{{ label }}</span>
+    <span
+      v-if="counter && counter > 0"
+      class="badge badge-sm badge-primary ml-0.5"
+      >{{ counter }}</span
+    >
   </button>
 </template>
 

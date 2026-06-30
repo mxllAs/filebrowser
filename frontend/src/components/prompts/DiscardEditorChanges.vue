@@ -1,13 +1,10 @@
 <template>
-  <div class="card floating">
-    <div class="card-content">
-      <p>
-        {{ $t("prompts.discardEditorChanges") }}
-      </p>
-    </div>
-    <div class="card-action">
+  <div>
+    <p class="py-4">{{ $t("prompts.discardEditorChanges") }}</p>
+
+    <div class="modal-action">
       <button
-        class="button button--flat button--grey"
+        class="btn btn-ghost btn-sm"
         @click="closeHovers"
         :aria-label="$t('buttons.cancel')"
         :title="$t('buttons.cancel')"
@@ -16,7 +13,7 @@
         {{ $t("buttons.cancel") }}
       </button>
       <button
-        class="button button--flat button--blue"
+        class="btn btn-ghost btn-sm text-primary"
         @click="currentPrompt.saveAction"
         :aria-label="$t('buttons.saveChanges')"
         :title="$t('buttons.saveChanges')"
@@ -27,7 +24,7 @@
       <button
         id="focus-prompt"
         @click="currentPrompt.confirm"
-        class="button button--flat button--red"
+        class="btn btn-ghost btn-sm text-error"
         :aria-label="$t('buttons.discardChanges')"
         :title="$t('buttons.discardChanges')"
         tabindex="2"

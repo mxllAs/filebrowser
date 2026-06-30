@@ -2,7 +2,7 @@
   position: fixed;
   bottom: 0;
   left: 0;
-  max-height: calc(100% - 4em);
+  max-height: calc(100% - 3rem);
   background: var(--surfacePrimary);
   color: var(--textPrimary);
   z-index: 9999;

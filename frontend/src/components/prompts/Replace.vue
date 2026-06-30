@@ -1,16 +1,12 @@
 <template>
-  <div class="card floating">
-    <div class="card-title">
-      <h2>{{ $t("prompts.replace") }}</h2>
-    </div>
+  <div>
+    <h3 class="text-lg font-semibold">{{ $t("prompts.replace") }}</h3>
 
-    <div class="card-content">
-      <p>{{ $t("prompts.replaceMessage") }}</p>
-    </div>
+    <p class="py-4">{{ $t("prompts.replaceMessage") }}</p>
 
-    <div class="card-action">
+    <div class="modal-action">
       <button
-        class="button button--flat button--grey"
+        class="btn btn-ghost btn-sm"
         @click="closeHovers"
         :aria-label="$t('buttons.cancel')"
         :title="$t('buttons.cancel')"
@@ -19,7 +15,7 @@
         {{ $t("buttons.cancel") }}
       </button>
       <button
-        class="button button--flat button--blue"
+        class="btn btn-ghost btn-sm text-primary"
         @click="currentPrompt.action"
         :aria-label="$t('buttons.continue')"
         :title="$t('buttons.continue')"
@@ -29,7 +25,7 @@
       </button>
       <button
         id="focus-prompt"
-        class="button button--flat button--red"
+        class="btn btn-ghost btn-sm text-error"
         @click="currentPrompt.confirm"
         :aria-label="$t('buttons.replace')"
         :title="$t('buttons.replace')"

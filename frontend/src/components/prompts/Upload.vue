@@ -1,32 +1,34 @@
 <template>
-  <div class="card floating">
-    <div class="card-title">
-      <h2>{{ t("prompts.upload") }}</h2>
-    </div>
+  <div>
+    <h3 class="text-lg font-semibold">{{ t("prompts.upload") }}</h3>
 
-    <div class="card-content">
-      <p>{{ t("prompts.uploadMessage") }}</p>
-    </div>
+    <p class="py-4">{{ t("prompts.uploadMessage") }}</p>
 
-    <div class="card-action full">
-      <div
-        @click="uploadFile"
-        @keypress.enter="uploadFile"
-        class="action"
-        id="focus-prompt"
-        tabindex="1"
-      >
-        <i class="material-icons">insert_drive_file</i>
-        <div class="title">{{ t("buttons.file") }}</div>
-      </div>
-      <div
-        @click="uploadFolder"
-        @keypress.enter="uploadFolder"
-        class="action"
-        tabindex="2"
-      >
-        <i class="material-icons">folder</i>
-        <div class="title">{{ t("buttons.folder") }}</div>
+    <div class="modal-action justify-center">
+      <div class="flex gap-4">
+        <div
+          @click="uploadFile"
+          @keypress.enter="uploadFile"
+          class="action flex flex-col items-center cursor-pointer p-4 rounded-box border border-base-300 hover:bg-base-200 transition"
+          id="focus-prompt"
+          tabindex="1"
+        >
+          <i class="material-icons text-4xl text-primary">insert_drive_file</i>
+          <div class="title text-lg font-semibold mt-2">
+            {{ t("buttons.file") }}
+          </div>
+        </div>
+        <div
+          @click="uploadFolder"
+          @keypress.enter="uploadFolder"
+          class="action flex flex-col items-center cursor-pointer p-4 rounded-box border border-base-300 hover:bg-base-200 transition"
+          tabindex="2"
+        >
+          <i class="material-icons text-4xl text-primary">folder</i>
+          <div class="title text-lg font-semibold mt-2">
+            {{ t("buttons.folder") }}
+          </div>
+        </div>
       </div>
     </div>
   </div>

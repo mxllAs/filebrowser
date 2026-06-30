@@ -1,25 +1,19 @@
 <template>
-  <div class="card floating">
-    <div class="card-title">
-      <h2>{{ $t("prompts.currentPassword") }}</h2>
-    </div>
+  <div>
+    <h3 class="text-lg font-semibold">{{ $t("prompts.currentPassword") }}</h3>
 
-    <div class="card-content">
-      <p>
-        {{ $t("prompts.currentPasswordMessage") }}
-      </p>
-      <input
-        id="focus-prompt"
-        class="input input--block"
-        type="password"
-        @keyup.enter="submit"
-        v-model="password"
-      />
-    </div>
+    <p class="py-4">{{ $t("prompts.currentPasswordMessage") }}</p>
+    <input
+      id="focus-prompt"
+      class="input input-bordered w-full"
+      type="password"
+      @keyup.enter="submit"
+      v-model="password"
+    />
 
-    <div class="card-action">
+    <div class="modal-action">
       <button
-        class="button button--flat button--grey"
+        class="btn btn-ghost btn-sm"
         @click="cancel"
         :aria-label="$t('buttons.cancel')"
         :title="$t('buttons.cancel')"
@@ -28,7 +22,7 @@
       </button>
       <button
         @click="submit"
-        class="button button--flat"
+        class="btn btn-ghost btn-sm text-primary"
         type="submit"
         :aria-label="$t('buttons.ok')"
         :title="$t('buttons.ok')"

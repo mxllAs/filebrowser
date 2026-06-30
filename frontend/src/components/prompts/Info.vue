@@ -1,10 +1,8 @@
 <template>
-  <div class="card floating">
-    <div class="card-title">
-      <h2>{{ $t("prompts.fileInfo") }}</h2>
-    </div>
+  <div>
+    <h3 class="text-lg font-semibold">{{ $t("prompts.fileInfo") }}</h3>
 
-    <div class="card-content">
+    <div class="py-4 space-y-1">
       <p v-if="selected.length > 1">
         {{ $t("prompts.filesSelected", { count: selected.length }) }}
       </p>
@@ -84,12 +82,12 @@
       </template>
     </div>
 
-    <div class="card-action">
+    <div class="modal-action">
       <button
         id="focus-prompt"
         type="submit"
         @click="closeHovers"
-        class="button button--flat"
+        class="btn btn-ghost btn-sm text-primary"
         :aria-label="$t('buttons.ok')"
         :title="$t('buttons.ok')"
       >

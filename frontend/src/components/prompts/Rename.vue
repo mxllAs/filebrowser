@@ -1,26 +1,22 @@
 <template>
-  <div class="card floating">
-    <div class="card-title">
-      <h2>{{ $t("prompts.rename") }}</h2>
-    </div>
+  <div>
+    <h3 class="text-lg font-semibold">{{ $t("prompts.rename") }}</h3>
 
-    <div class="card-content">
-      <p>
-        {{ $t("prompts.renameMessage") }} <code>{{ oldName }}</code
-        >:
-      </p>
-      <input
-        id="focus-prompt"
-        class="input input--block"
-        type="text"
-        @keyup.enter="submit"
-        v-model.trim="name"
-      />
-    </div>
+    <p class="py-4">
+      {{ $t("prompts.renameMessage") }} <code>{{ oldName }}</code
+      >:
+    </p>
+    <input
+      id="focus-prompt"
+      class="input input-bordered w-full"
+      type="text"
+      @keyup.enter="submit"
+      v-model.trim="name"
+    />
 
-    <div class="card-action">
+    <div class="modal-action">
       <button
-        class="button button--flat button--grey"
+        class="btn btn-ghost btn-sm"
         @click="closeHovers"
         :aria-label="$t('buttons.cancel')"
         :title="$t('buttons.cancel')"
@@ -29,7 +25,7 @@
       </button>
       <button
         @click="submit"
-        class="button button--flat"
+        class="btn btn-ghost btn-sm text-primary"
         type="submit"
         :aria-label="$t('buttons.rename')"
         :title="$t('buttons.rename')"

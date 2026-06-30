@@ -32,6 +32,12 @@ export default defineConfigWithVueTs(
           shallowOnly: true,
         },
       ],
+      "prettier/prettier": [
+        "error",
+        {
+          endOfLine: "auto",
+        },
+      ],
     },
   }
 );

@@ -15,7 +15,6 @@
 @import "./login.css";
 @import "./mobile.css";
 @import "./epubReader.css";
-@import "./mdPreview.css";
 @import "./context-menu.css";
 
 /* For testing only
@@ -77,63 +76,6 @@ main .spinner .bounce2 {
   }
 }
 
-/* * * * * * * * * * * * * * * *
- *            ACTION           *
- * * * * * * * * * * * * * * * */
-
-.action {
-  display: inline-block;
-  cursor: pointer;
-  transition: 0.2s ease all;
-  border: 0;
-  margin: 0;
-  color: var(--action);
-  border-radius: 50%;
-  background: transparent;
-  padding: 0;
-  box-shadow: none;
-  vertical-align: middle;
-  text-align: left;
-  position: relative;
-}
-
-.action.disabled,
-.action[disabled] {
-  opacity: 0.2;
-  cursor: not-allowed;
-}
-
-.action i {
-  padding: 0.4em;
-  transition: 0.1s ease-in-out all;
-  border-radius: 50%;
-}
-
-.action:hover {
-  background-color: var(--hover);
-}
-
-.action ul {
-  position: absolute;
-  top: 0;
-  color: #7d7d7d;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  flex-direction: column;
-  display: flex;
-}
-
-.action ul li {
-  line-height: 1;
-  padding: 0.7em;
-  transition: 0.1s ease background-color;
-}
-
-.action ul li:hover {
-  background-color: var(--divider);
-}
-
 #click-overlay {
   display: none;
   position: fixed;
@@ -148,21 +90,24 @@ main .spinner .bounce2 {
   visibility: visible;
 }
 
-.action .counter {
-  display: block;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background: var(--blue);
-  color: var(--iconSecondary);
-  border-radius: 50%;
-  font-size: 0.75em;
-  width: 1.8em;
-  height: 1.8em;
-  text-align: center;
-  line-height: 1.55em;
-  font-weight: bold;
-  border: 2px solid var(--borderPrimary);
+/* Transitional .action fallback — will be removed after all components use DaisyUI btn */
+.action {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.15s ease all;
+  border: 0;
+  margin: 0;
+  padding: 0.4em;
+  background: transparent;
+  border-radius: 0.5rem;
+  color: inherit;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.action:hover {
+  background-color: var(--hover);
 }
 
 /* PREVIEWER */
@@ -351,23 +296,14 @@ main .spinner .bounce2 {
 }
 
 #editor-container .breadcrumbs {
-  height: 2.3em;
+  height: auto;
   padding: 0 1em;
   position: relative;
   top: 0;
 }
 
-/*** RTL - flip and position arrow of path ***/
-html[dir="rtl"] .breadcrumbs .chevron {
-  transform: scaleX(-1) translateX(16em);
-}
-
-#editor-container .breadcrumbs span {
-  font-size: 0.75rem;
-}
-
-#editor-container .breadcrumbs i {
-  font-size: 1rem;
+#editor-container .breadcrumbs ul li {
+  font-size: 0.8rem;
 }
 
 /* * * * * * * * * * * * * * * *

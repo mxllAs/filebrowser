@@ -1,25 +1,21 @@
 <template>
-  <div class="card floating">
-    <div class="card-title">
-      <h2>{{ t("prompts.newDir") }}</h2>
-    </div>
+  <div>
+    <h3 class="text-lg font-semibold">{{ t("prompts.newDir") }}</h3>
 
-    <div class="card-content">
-      <p>{{ t("prompts.newDirMessage") }}</p>
-      <input
-        id="focus-prompt"
-        class="input input--block"
-        type="text"
-        @keyup.enter="submit"
-        v-model.trim="name"
-        tabindex="1"
-      />
-      <CreateFilePath :name="name" :is-dir="true" :path="base" />
-    </div>
+    <p class="py-4">{{ t("prompts.newDirMessage") }}</p>
+    <input
+      id="focus-prompt"
+      class="input input-bordered w-full"
+      type="text"
+      @keyup.enter="submit"
+      v-model.trim="name"
+      tabindex="1"
+    />
+    <CreateFilePath :name="name" :is-dir="true" :path="base" />
 
-    <div class="card-action">
+    <div class="modal-action">
       <button
-        class="button button--flat button--grey"
+        class="btn btn-ghost btn-sm"
         @click="layoutStore.closeHovers"
         :aria-label="t('buttons.cancel')"
         :title="t('buttons.cancel')"
@@ -28,7 +24,7 @@
         {{ t("buttons.cancel") }}
       </button>
       <button
-        class="button button--flat"
+        class="btn btn-ghost btn-sm text-primary"
         :aria-label="$t('buttons.create')"
         :title="t('buttons.create')"
         @click="submit"

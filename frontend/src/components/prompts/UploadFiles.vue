@@ -4,7 +4,7 @@
     class="upload-files"
     v-bind:class="{ closed: !open }"
   >
-    <div class="card floating">
+    <div class="">
       <div class="card-title">
         <h2>
           {{

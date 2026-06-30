@@ -18,6 +18,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
 import duration from "dayjs/plugin/duration";
 
+import "./css/tailwind.css";
 import "./css/styles.css";
 
 // register dayjs plugins globally

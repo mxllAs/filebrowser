@@ -1,25 +1,21 @@
 <template>
-  <div class="card floating">
-    <div class="card-title">
-      <h2>{{ $t("prompts.copy") }}</h2>
-    </div>
+  <div>
+    <h3 class="text-lg font-semibold">{{ $t("prompts.copy") }}</h3>
 
-    <div class="card-content">
-      <p>{{ $t("prompts.copyMessage") }}</p>
-      <file-list
-        ref="fileList"
-        @update:selected="(val) => (dest = val)"
-        tabindex="1"
-      />
-    </div>
+    <p class="py-4">{{ $t("prompts.copyMessage") }}</p>
+    <file-list
+      ref="fileList"
+      @update:selected="(val) => (dest = val)"
+      tabindex="1"
+    />
 
     <div
-      class="card-action"
+      class="modal-action"
       style="display: flex; align-items: center; justify-content: space-between"
     >
       <template v-if="user.perm.create">
         <button
-          class="button button--flat"
+          class="btn btn-ghost btn-sm text-primary"
           @click="$refs.fileList.createDir()"
           :aria-label="$t('sidebar.newFolder')"
           :title="$t('sidebar.newFolder')"
@@ -30,7 +26,7 @@
       </template>
       <div>
         <button
-          class="button button--flat button--grey"
+          class="btn btn-ghost btn-sm"
           @click="closeHovers"
           :aria-label="$t('buttons.cancel')"
           :title="$t('buttons.cancel')"
@@ -40,7 +36,7 @@
         </button>
         <button
           id="focus-prompt"
-          class="button button--flat"
+          class="btn btn-ghost btn-sm text-primary"
           @click="copy"
           :aria-label="$t('buttons.copy')"
           :title="$t('buttons.copy')"

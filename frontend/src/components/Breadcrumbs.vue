@@ -1,20 +1,26 @@
 <template>
-  <div class="breadcrumbs">
-    <component
-      :is="element"
-      :to="base || ''"
-      :aria-label="t('files.home')"
-      :title="t('files.home')"
-    >
-      <i class="material-icons">home</i>
-    </component>
+  <div
+    class="breadcrumbs text-xs sticky top-12 z-20 bg-base-100 border-b border-base-300/50 px-3 py-1"
+  >
+    <ul>
+      <li>
+        <component
+          :is="element"
+          :to="base || ''"
+          :aria-label="t('files.home')"
+          :title="t('files.home')"
+          class="inline-flex items-center gap-1 link link-hover"
+        >
+          <i class="material-icons text-base">home</i>
+        </component>
+      </li>
 
-    <span v-for="(link, index) in items" :key="index">
-      <span class="chevron"
-        ><i class="material-icons">keyboard_arrow_right</i></span
-      >
-      <component :is="element" :to="link.url">{{ link.name }}</component>
-    </span>
+      <li v-for="(link, index) in items" :key="index">
+        <component :is="element" :to="link.url" class="link link-hover">{{
+          link.name
+        }}</component>
+      </li>
+    </ul>
   </div>
 </template>
 

@@ -1,17 +1,15 @@
 <template>
-  <div class="card floating" id="download">
-    <div class="card-title">
-      <h2>{{ t("prompts.download") }}</h2>
-    </div>
+  <div id="download">
+    <h3 class="text-lg font-semibold">{{ t("prompts.download") }}</h3>
 
-    <div class="card-content">
-      <p>{{ t("prompts.downloadMessage") }}</p>
+    <p class="py-4">{{ t("prompts.downloadMessage") }}</p>
 
+    <div class="flex flex-col gap-2">
       <button
         id="focus-prompt"
         v-for="(ext, format) in formats"
         :key="format"
-        class="button button--block"
+        class="btn btn-block"
         @click="layoutStore.currentPrompt?.confirm(format)"
       >
         {{ ext }}

@@ -1,5 +1,5 @@
 <template>
-  <div id="editor-container">
+  <div id="editor-container" class="bg-base-100">
     <header-bar>
       <action icon="close" :label="t('buttons.close')" @action="close()" />
       <title>{{ fileStore.req?.name ?? "" }}</title>
@@ -9,7 +9,9 @@
         @action="increaseFontSize"
         :label="t('buttons.increaseFontSize')"
       />
-      <span class="editor-font-size">{{ fontSize }}px</span>
+      <span class="mx-2 text-sm font-medium text-base-content/80 select-none"
+        >{{ fontSize }}px</span
+      >
       <action
         icon="remove"
         @action="decreaseFontSize"
@@ -32,47 +34,104 @@
       />
     </header-bar>
 
-    <!-- preview container -->
-    <div class="loading delayed" v-if="layoutStore.loading">
-      <div class="spinner">
-        <div class="bounce1"></div>
-        <div class="bounce2"></div>
-        <div class="bounce3"></div>
-      </div>
+    <div
+      class="loading delayed z-50 flex items-center justify-center bg-base-100/60 backdrop-blur-md absolute inset-0 transition-all duration-300"
+      v-if="layoutStore.loading"
+    >
+      <span class="loading loading-spinner loading-lg text-primary"></span>
     </div>
-    <template v-else>
-      <div class="editor-header">
-        <Breadcrumbs base="/files" noLink />
 
-        <div>
-          <button
-            :disabled="isSelectionEmpty"
-            @click="executeEditorCommand('copy')"
+    <template v-else>
+      <!-- Modern Toolbar -->
+      <div
+        class="flex items-center justify-between px-4 py-3 border-b border-base-300/50 bg-base-100/95 backdrop-blur-xl z-20 w-full shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] transition-all"
+      >
+        <div class="flex items-center gap-3">
+          <div class="p-1.5 bg-base-200/50 rounded-lg text-base-content/70">
+            <i class="material-icons text-[1.1rem]">edit_document</i>
+          </div>
+          <Breadcrumbs
+            base="/files"
+            noLink
+            class="text-sm font-semibold tracking-wide text-base-content/90"
+          />
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Action Buttons Group -->
+          <div
+            class="join bg-base-200/40 p-1 rounded-xl shadow-sm border border-base-300/40 backdrop-blur-sm"
           >
-            <span><i class="material-icons">content_copy</i></span>
-          </button>
+            <button
+              class="btn btn-sm btn-ghost join-item hover:bg-base-100 hover:shadow-sm hover:text-primary transition-all duration-200 ease-out"
+              :class="{ 'opacity-40 cursor-not-allowed': isSelectionEmpty }"
+              :disabled="isSelectionEmpty"
+              @click="executeEditorCommand('copy')"
+              title="Copy"
+            >
+              <i class="material-icons text-[1.1rem]">content_copy</i>
+            </button>
+            <button
+              class="btn btn-sm btn-ghost join-item hover:bg-base-100 hover:shadow-sm hover:text-primary transition-all duration-200 ease-out"
+              :class="{ 'opacity-40 cursor-not-allowed': isSelectionEmpty }"
+              :disabled="isSelectionEmpty"
+              @click="executeEditorCommand('cut')"
+              title="Cut"
+            >
+              <i class="material-icons text-[1.1rem]">content_cut</i>
+            </button>
+            <button
+              class="btn btn-sm btn-ghost join-item hover:bg-base-100 hover:shadow-sm hover:text-primary transition-all duration-200 ease-out"
+              @click="executeEditorCommand('paste')"
+              title="Paste"
+            >
+              <i class="material-icons text-[1.1rem]">content_paste</i>
+            </button>
+          </div>
+
+          <div class="w-[1px] h-6 bg-base-300/80 mx-1 rounded-full"></div>
+
+          <!-- Settings Dropdown / Command Palette -->
           <button
-            :disabled="isSelectionEmpty"
-            @click="executeEditorCommand('cut')"
+            class="btn btn-sm btn-ghost btn-circle hover:bg-base-200 hover:text-primary transition-colors"
+            @click="executeEditorCommand('openCommandPalette')"
+            title="Command Palette"
           >
-            <span><i class="material-icons">content_cut</i></span>
-          </button>
-          <button @click="executeEditorCommand('paste')">
-            <span><i class="material-icons">content_paste</i></span>
-          </button>
-          <button @click="executeEditorCommand('openCommandPalette')">
-            <span><i class="material-icons">more_vert</i></span>
+            <i class="material-icons text-[1.2rem]">more_vert</i>
           </button>
         </div>
       </div>
 
-      <div
-        v-show="isPreview && isMarkdownFile"
-        id="preview-container"
-        class="md_preview"
-        v-html="previewContent"
-      ></div>
-      <form v-show="!isPreview || !isMarkdownFile" id="editor"></form>
+      <!-- Main Editor/Preview Area -->
+      <div class="flex flex-1 w-full h-full overflow-hidden bg-base-200/20">
+        <!-- Left: Ace Editor -->
+        <form
+          id="editor"
+          class="flex-1 min-w-0 bg-base-100 shadow-[inset_-1px_0_10px_rgba(0,0,0,0.02)]"
+          @mouseenter="hoveredPane = 'editor'"
+        ></form>
+
+        <!-- Divider -->
+        <div
+          class="w-1 bg-gradient-to-b from-base-200 via-base-300/50 to-base-200 z-10 cursor-col-resize hover:bg-primary/30 transition-colors"
+          v-show="isPreview && isMarkdownFile"
+        ></div>
+
+        <!-- Right: Beautiful Markdown Preview -->
+        <div
+          v-show="isPreview && isMarkdownFile"
+          ref="previewScrollContainer"
+          class="flex-1 min-w-0 overflow-y-auto bg-base-100 shadow-[inset_1px_0_10px_rgba(0,0,0,0.02)]"
+          @mouseenter="hoveredPane = 'preview'"
+          @scroll="onPreviewScroll"
+        >
+          <div
+            id="preview-container"
+            class="prose prose-sm md:prose-base lg:prose-lg max-w-4xl mx-auto py-8 px-6 lg:py-12 prose-slate dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary prose-a:decoration-primary/30 hover:prose-a:decoration-primary prose-img:rounded-2xl prose-img:shadow-lg prose-pre:bg-base-300/50 prose-pre:text-base-content prose-pre:backdrop-blur-md prose-blockquote:border-l-primary prose-blockquote:bg-primary/5 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:rounded-r-lg transition-all duration-300"
+            v-html="previewContent"
+          ></div>
+        </div>
+      </div>
     </template>
   </div>
 </template>
@@ -95,7 +154,15 @@ import { useLayoutStore } from "@/stores/layout";
 import { getEditorTheme } from "@/utils/theme";
 import { marked } from "marked";
 import markedKatex from "marked-katex-extension";
-import { inject, onBeforeUnmount, onMounted, ref, watchEffect } from "vue";
+import {
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watchEffect,
+  computed,
+  watch,
+} from "vue";
 import { useI18n } from "vue-i18n";
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { read, copy } from "@/utils/clipboard";
@@ -116,9 +183,26 @@ const fontSize = ref(parseInt(localStorage.getItem("editorFontSize") || "14"));
 
 const isPreview = ref(false);
 const previewContent = ref("");
-const isMarkdownFile =
-  fileStore.req?.name.endsWith(".md") ||
-  fileStore.req?.name.endsWith(".markdown");
+const hoveredPane = ref<string | null>(null);
+const previewScrollContainer = ref<HTMLElement | null>(null);
+
+const isMarkdownFile = computed(() => {
+  return (
+    fileStore.req?.name.endsWith(".md") ||
+    fileStore.req?.name.endsWith(".markdown")
+  );
+});
+
+watch(
+  isMarkdownFile,
+  (isMd) => {
+    if (isMd) {
+      isPreview.value = true;
+    }
+  },
+  { immediate: true }
+);
+
 const katexOptions = {
   output: "mathml" as const,
   throwOnError: false,
@@ -126,6 +210,34 @@ const katexOptions = {
 marked.use(markedKatex(katexOptions));
 
 const isSelectionEmpty = ref(true);
+
+const onPreviewScroll = (e: Event) => {
+  if (hoveredPane.value !== "preview" || !editor.value) return;
+  const el = e.target as HTMLElement;
+  const maxPreviewScroll = el.scrollHeight - el.clientHeight;
+  if (maxPreviewScroll <= 0) return;
+
+  const scrollRatio = el.scrollTop / maxPreviewScroll;
+  const renderer = editor.value.renderer;
+  const maxEditorScroll =
+    editor.value.session.getScreenLength() * renderer.lineHeight -
+    (renderer as any).$size.scrollerHeight;
+
+  if (maxEditorScroll > 0) {
+    editor.value.session.setScrollTop(scrollRatio * maxEditorScroll);
+  }
+};
+
+const updatePreview = async () => {
+  if (!isMarkdownFile.value || !isPreview.value) return;
+  const new_value = editor.value?.getValue() || "";
+  try {
+    previewContent.value = DOMPurify.sanitize(await marked(new_value));
+  } catch (error) {
+    console.error("Failed to convert content to HTML:", error);
+    previewContent.value = "";
+  }
+};
 
 const executeEditorCommand = (name: string) => {
   if (name == "paste") {
@@ -160,16 +272,13 @@ onMounted(() => {
 
   const fileContent = fileStore.req?.content || "";
 
-  watchEffect(async () => {
-    if (isMarkdownFile && isPreview.value) {
-      const new_value = editor.value?.getValue() || "";
-      try {
-        previewContent.value = DOMPurify.sanitize(await marked(new_value));
-      } catch (error) {
-        console.error("Failed to convert content to HTML:", error);
-        previewContent.value = "";
-      }
+  watchEffect(() => {
+    if (isPreview.value) {
+      updatePreview();
     }
+    setTimeout(() => {
+      editor.value?.resize();
+    }, 50);
   });
 
   ace.config.set(
@@ -237,6 +346,34 @@ const initEditor = (fileContent: string) => {
   const selection = editor.value?.getSelection();
   selection.on("changeSelection", function () {
     isSelectionEmpty.value = selection.isEmpty();
+  });
+
+  editor.value.session.on("change", () => {
+    if (isMarkdownFile.value && isPreview.value) {
+      updatePreview();
+    }
+  });
+
+  editor.value.session.on("changeScrollTop", (scrollTop: number) => {
+    if (
+      hoveredPane.value !== "editor" ||
+      !previewScrollContainer.value ||
+      !editor.value
+    )
+      return;
+
+    const renderer = editor.value.renderer;
+    const maxEditorScroll =
+      editor.value.session.getScreenLength() * renderer.lineHeight -
+      (renderer as any).$size.scrollerHeight;
+
+    if (maxEditorScroll <= 0) return;
+
+    const scrollRatio = scrollTop / maxEditorScroll;
+    const el = previewScrollContainer.value;
+    const maxPreviewScroll = el.scrollHeight - el.clientHeight;
+
+    el.scrollTop = scrollRatio * maxPreviewScroll;
   });
 };
 
@@ -325,38 +462,3 @@ const preview = () => {
   isPreview.value = !isPreview.value;
 };
 </script>
-
-<style scoped>
-.editor-font-size {
-  margin: 0 0.5em;
-  color: var(--fg);
-}
-
-.editor-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.editor-header > div > button {
-  background: transparent;
-  color: var(--action);
-  border: none;
-  outline: none;
-  opacity: 0.8;
-  cursor: pointer;
-}
-
-.editor-header > div > button:hover:not(:disabled) {
-  opacity: 1;
-}
-
-.editor-header > div > button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.editor-header > div > button > span > i {
-  font-size: 1.2rem;
-}
-</style>

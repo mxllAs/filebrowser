@@ -1,14 +1,12 @@
 <template>
-  <div class="card floating">
-    <div class="card-title">
-      <h2>
-        {{
-          personalized
-            ? $t("prompts.resolveConflict")
-            : $t("prompts.replaceOrSkip")
-        }}
-      </h2>
-    </div>
+  <div>
+    <h3 class="text-lg font-semibold">
+      {{
+        personalized
+          ? $t("prompts.resolveConflict")
+          : $t("prompts.replaceOrSkip")
+      }}
+    </h3>
 
     <div class="card-content">
       <template v-if="personalized">
@@ -130,10 +128,10 @@
       </template>
     </div>
 
-    <div class="card-action" style="display: flex; justify-content: end">
+    <div class="modal-action" style="display: flex; justify-content: end">
       <div>
         <button
-          class="button button--flat button--grey"
+          class="btn btn-ghost btn-sm"
           @click="close"
           :aria-label="$t('buttons.cancel')"
           :title="$t('buttons.cancel')"
@@ -144,7 +142,7 @@
         <button
           v-if="personalized"
           id="focus-prompt"
-          class="button button--flat"
+          class="btn btn-ghost btn-sm text-primary"
           @click="(event) => currentPrompt?.confirm(event, conflict)"
           :aria-label="$t('buttons.ok')"
           :title="$t('buttons.ok')"

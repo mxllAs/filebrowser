@@ -1,22 +1,4 @@
-header {
-  z-index: 1000;
-  background: var(--surfacePrimary);
-  border-bottom: 1px solid var(--divider);
-  box-shadow: 0 0 5px var(--borderPrimary);
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 4em;
-  width: 100%;
-  padding: 0;
-  display: flex;
-  padding: 0.5em 0.5em 0.5em 1em;
-  align-items: center;
-}
-
-header > * {
-  flex: 0 0 auto;
-}
+/* Header styles — positioning handled by DaisyUI navbar, only overrides below */
 
 header title {
   display: block;
@@ -24,7 +6,10 @@ header title {
   padding: 0 1em;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 1.2em;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--textSecondary);
+  letter-spacing: -0.015em;
 }
 
 header .overlay {
@@ -37,30 +22,7 @@ header a:hover {
   color: inherit;
 }
 
-header > div:first-child > .action,
-header img {
-  margin-right: 1em;
-}
-
-header img {
-  height: 2.5em;
-}
-
-header .action span {
-  display: none;
-}
-
-header > div div {
-  vertical-align: middle;
-  position: relative;
-}
-
-header .search-button,
-header .menu-button {
-  display: none;
-}
-
-#more {
+header .search-button {
   display: none;
 }
 
@@ -68,7 +30,7 @@ header .menu-button {
   position: relative;
   height: 100%;
   width: 100%;
-  max-width: 25em;
+  max-width: 24em;
 }
 
 #search.active {
@@ -82,26 +44,32 @@ header .menu-button {
 }
 
 #search #input {
-  background: var(--surfaceSecondary);
-  border-color: var(--surfacePrimary);
+  background: var(--hover);
+  border: 1px solid var(--borderPrimary);
   display: flex;
   height: 100%;
-  padding: 0em 0.75em;
-  border-radius: 0.3em;
-  transition: 0.1s ease all;
+  padding: 0em 0.85em;
+  border-radius: 10px;
+  transition: all 0.2s ease;
   align-items: center;
   z-index: 2;
 }
 
+#search #input:hover {
+  background: var(--surfaceSecondary);
+  border-color: var(--borderSecondary);
+}
+
 #search #input input::placeholder {
-  color: var(--textSecondary);
+  color: var(--textPrimary);
+  font-weight: 500;
 }
 
 #search.active #input {
   border-bottom: 1px solid var(--borderPrimary);
-  box-shadow: 0 0 5px var(--borderPrimary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   background: var(--surfacePrimary);
-  height: 4em;
+  height: 3rem;
 }
 
 #search.active > div {
@@ -162,7 +130,7 @@ html[dir="rtl"] #search #result ul > * {
 
 #search.active #result {
   padding: 0.5em;
-  height: calc(100% - 4em);
+  height: calc(100% - 3rem);
 }
 
 #search ul {
