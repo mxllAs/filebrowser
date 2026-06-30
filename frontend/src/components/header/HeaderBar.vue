@@ -2,7 +2,7 @@
   <header
     class="navbar bg-base-100/85 backdrop-blur-xl border-b border-base-300/50 sticky top-0 z-30 px-4 h-12 min-h-0"
   >
-    <div class="navbar-start gap-2">
+    <div class="navbar-start w-auto gap-2">
       <img v-if="showLogo" :src="logoURL" class="h-7" />
       <span v-if="showMenu" class="md:hidden">
         <Action
@@ -17,7 +17,7 @@
       <slot />
     </div>
 
-    <div class="navbar-end gap-0.5">
+    <div class="navbar-end w-auto gap-0.5">
       <div class="hidden md:flex gap-0.5">
         <slot name="actions" />
       </div>
