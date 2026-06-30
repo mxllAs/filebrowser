@@ -165,99 +165,142 @@
         v-else
         id="listing"
         ref="listing"
-        class="file-icons"
+        class="file-icons w-full"
         data-clear-on-click="true"
-        :class="authStore.user?.viewMode ?? ''"
+        :class="[
+          authStore.user?.viewMode ?? 'list',
+          {
+            'overflow-x-auto': (authStore.user?.viewMode ?? 'list') === 'list',
+          },
+        ]"
         @click="handleEmptyAreaClick"
       >
-        <div>
-          <div class="item header">
-            <div>
-              <p
-                :class="{ active: nameSorted }"
-                class="name"
-                role="button"
-                tabindex="0"
-                @click="sort('name')"
-                :title="t('files.sortByName')"
-                :aria-label="t('files.sortByName')"
-              >
-                <span>{{ t("files.name") }}</span>
-                <i class="material-icons">{{ nameIcon }}</i>
-              </p>
+        <!-- Table for List View -->
+        <table
+          v-if="(authStore.user?.viewMode ?? 'list') === 'list'"
+          class="table table-zebra table-sm w-full"
+        >
+          <thead>
+            <tr>
+              <th>
+                <button
+                  @click="sort('name')"
+                  class="flex items-center gap-1 hover:text-base-content transition-colors"
+                  :class="{ 'text-primary font-bold': nameSorted }"
+                >
+                  {{ t("files.name") }}
+                  <i
+                    class="material-icons text-sm"
+                    :class="{ 'opacity-0': !nameSorted }"
+                    >{{ nameIcon }}</i
+                  >
+                </button>
+              </th>
+              <th>
+                <button
+                  @click="sort('size')"
+                  class="flex items-center gap-1 hover:text-base-content transition-colors"
+                  :class="{ 'text-primary font-bold': sizeSorted }"
+                >
+                  {{ t("files.size") }}
+                  <i
+                    class="material-icons text-sm"
+                    :class="{ 'opacity-0': !sizeSorted }"
+                    >{{ sizeIcon }}</i
+                  >
+                </button>
+              </th>
+              <th>
+                <button
+                  @click="sort('modified')"
+                  class="flex items-center gap-1 hover:text-base-content transition-colors"
+                  :class="{ 'text-primary font-bold': modifiedSorted }"
+                >
+                  {{ t("files.lastModified") }}
+                  <i
+                    class="material-icons text-sm"
+                    :class="{ 'opacity-0': !modifiedSorted }"
+                    >{{ modifiedIcon }}</i
+                  >
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody @contextmenu="showContextMenu" data-clear-on-click="true">
+            <item
+              v-for="item in dirs"
+              :key="base64(item.name)"
+              v-bind:index="item.index"
+              v-bind:name="item.name"
+              v-bind:isDir="item.isDir"
+              v-bind:url="item.url"
+              v-bind:modified="item.modified"
+              v-bind:type="item.type"
+              v-bind:size="item.size"
+              v-bind:path="item.path"
+            />
+            <item
+              v-for="item in files"
+              :key="base64(item.name)"
+              v-bind:index="item.index"
+              v-bind:name="item.name"
+              v-bind:isDir="item.isDir"
+              v-bind:url="item.url"
+              v-bind:modified="item.modified"
+              v-bind:type="item.type"
+              v-bind:size="item.size"
+              v-bind:path="item.path"
+            />
+          </tbody>
+        </table>
 
-              <p
-                :class="{ active: sizeSorted }"
-                class="size"
-                role="button"
-                tabindex="0"
-                @click="sort('size')"
-                :title="t('files.sortBySize')"
-                :aria-label="t('files.sortBySize')"
-              >
-                <span>{{ t("files.size") }}</span>
-                <i class="material-icons">{{ sizeIcon }}</i>
-              </p>
-              <p
-                :class="{ active: modifiedSorted }"
-                class="modified"
-                role="button"
-                tabindex="0"
-                @click="sort('modified')"
-                :title="t('files.sortByLastModified')"
-                :aria-label="t('files.sortByLastModified')"
-              >
-                <span>{{ t("files.lastModified") }}</span>
-                <i class="material-icons">{{ modifiedIcon }}</i>
-              </p>
-            </div>
+        <!-- Grid for Mosaic & Gallery Views -->
+        <div v-else class="w-full">
+          <h2 data-clear-on-click="true" v-if="fileStore.req?.numDirs ?? false" class="text-sm font-medium text-base-content/70 mx-2 mt-4 mb-2">
+            {{ t("files.folders") }}
+          </h2>
+          <div
+            v-if="fileStore.req?.numDirs ?? false"
+            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 px-2"
+            @contextmenu="showContextMenu"
+            data-clear-on-click="true"
+          >
+            <item
+              v-for="item in dirs"
+              :key="base64(item.name)"
+              v-bind:index="item.index"
+              v-bind:name="item.name"
+              v-bind:isDir="item.isDir"
+              v-bind:url="item.url"
+              v-bind:modified="item.modified"
+              v-bind:type="item.type"
+              v-bind:size="item.size"
+              v-bind:path="item.path"
+            />
           </div>
-        </div>
 
-        <h2 data-clear-on-click="true" v-if="fileStore.req?.numDirs ?? false">
-          {{ t("files.folders") }}
-        </h2>
-        <div
-          v-if="fileStore.req?.numDirs ?? false"
-          data-clear-on-click="true"
-          @contextmenu="showContextMenu"
-        >
-          <item
-            v-for="item in dirs"
-            :key="base64(item.name)"
-            v-bind:index="item.index"
-            v-bind:name="item.name"
-            v-bind:isDir="item.isDir"
-            v-bind:url="item.url"
-            v-bind:modified="item.modified"
-            v-bind:type="item.type"
-            v-bind:size="item.size"
-            v-bind:path="item.path"
+          <h2 data-clear-on-click="true" v-if="fileStore.req?.numFiles ?? false" class="text-sm font-medium text-base-content/70 mx-2 mt-6 mb-2">
+            {{ t("files.files") }}
+          </h2>
+          <div
+            v-if="fileStore.req?.numFiles ?? false"
+            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 px-2"
+            @contextmenu="showContextMenu"
+            data-clear-on-click="true"
           >
-          </item>
-        </div>
-
-        <h2 data-clear-on-click="true" v-if="fileStore.req?.numFiles ?? false">
-          {{ t("files.files") }}
-        </h2>
-        <div
-          v-if="fileStore.req?.numFiles ?? false"
-          data-clear-on-click="true"
-          @contextmenu="showContextMenu"
-        >
-          <item
-            v-for="item in files"
-            :key="base64(item.name)"
-            v-bind:index="item.index"
-            v-bind:name="item.name"
-            v-bind:isDir="item.isDir"
-            v-bind:url="item.url"
-            v-bind:modified="item.modified"
-            v-bind:type="item.type"
-            v-bind:size="item.size"
-            v-bind:path="item.path"
-          >
-          </item>
+            <item
+              v-for="item in files"
+              :key="base64(item.name)"
+              v-bind:index="item.index"
+              v-bind:name="item.name"
+              v-bind:isDir="item.isDir"
+              v-bind:url="item.url"
+              v-bind:modified="item.modified"
+              v-bind:type="item.type"
+              v-bind:size="item.size"
+              v-bind:path="item.path"
+            />
+          </div>
         </div>
         <context-menu
           :show="isContextMenuVisible"

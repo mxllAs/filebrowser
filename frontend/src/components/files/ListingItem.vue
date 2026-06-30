@@ -1,6 +1,20 @@
 <template>
-  <div
-    class="item"
+  <component
+    :is="isListView ? 'tr' : 'div'"
+    class="item group transition-colors cursor-pointer user-select-none"
+    :class="[
+      isListView
+        ? isSelected
+          ? 'bg-primary text-primary-content hover:bg-primary/90'
+          : 'hover:bg-base-200'
+        : isMosaicGallery
+          ? 'card image-full h-48'
+          : 'card card-compact bg-base-100 shadow-sm border border-base-200 hover:shadow-md',
+      {
+        'ring-2 ring-primary ring-offset-2 ring-offset-base-100':
+          !isListView && isSelected,
+      },
+    ]"
     role="button"
     tabindex="0"
     :draggable="isDraggable"
@@ -22,25 +36,116 @@
     :data-ext="getExtension(name).toLowerCase()"
     @contextmenu="contextMenu"
   >
-    <div>
-      <img
-        v-if="!readOnly && type === 'image' && isThumbsEnabled"
-        v-lazy="thumbnailUrl"
-      />
-      <i v-else class="material-icons"></i>
-    </div>
+    <!-- List View Rendering -->
+    <template v-if="isListView">
+      <td class="w-1/2">
+        <div class="flex items-center gap-3 overflow-hidden">
+          <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+            <img
+              v-if="!readOnly && type === 'image' && isThumbsEnabled"
+              v-lazy="thumbnailUrl"
+              class="w-full h-full object-cover rounded"
+            />
+            <i
+              v-else
+              class="material-icons text-2xl"
+              :class="
+                isSelected
+                  ? 'text-primary-content'
+                  : isDir
+                    ? 'text-primary'
+                    : 'text-base-content/50'
+              "
+        ></i>
+          </div>
+          <span class="truncate font-medium">{{ name }}</span>
+        </div>
+      </td>
+      <td class="w-1/4">
+        <span
+          v-if="isDir"
+          class="text-base-content/50"
+          :class="{ 'text-primary-content/70': isSelected }"
+          >&mdash;</span
+        >
+        <span
+          v-else
+          class="text-sm text-base-content/70"
+          :class="{ 'text-primary-content/80': isSelected }"
+          >{{ humanSize() }}</span
+        >
+      </td>
+      <td class="w-1/4">
+        <time
+          class="text-sm text-base-content/70"
+          :class="{ 'text-primary-content/80': isSelected }"
+          :datetime="modified"
+          >{{ humanTime() }}</time
+        >
+      </td>
+    </template>
 
-    <div>
-      <p class="name">{{ name }}</p>
+    <!-- Mosaic (Grid) View Rendering -->
+    <template v-else-if="!isMosaicGallery">
+      <figure
+        class="px-4 pt-4 pb-0 flex items-center justify-center h-32 bg-base-200/50"
+      >
+        <img
+          v-if="!readOnly && type === 'image' && isThumbsEnabled"
+          v-lazy="thumbnailUrl"
+          class="w-full h-full object-cover rounded-box"
+        />
+        <i
+          v-else
+          class="material-icons text-6xl"
+          :class="isDir ? 'text-primary' : 'text-base-content/30'"
+        ></i>
+      </figure>
+      <div class="card-body p-3 gap-0">
+        <h3
+          class="card-title text-sm font-medium leading-tight truncate block w-full"
+          :title="name"
+        >
+          {{ name }}
+        </h3>
+        <div class="flex justify-between items-center mt-1 opacity-70 text-xs">
+          <span v-if="isDir">&mdash;</span>
+          <span v-else>{{ humanSize() }}</span>
+          <time :datetime="modified">{{ humanTime() }}</time>
+        </div>
+      </div>
+    </template>
 
-      <p v-if="isDir" class="size" data-order="-1">&mdash;</p>
-      <p v-else class="size" :data-order="humanSize()">{{ humanSize() }}</p>
-
-      <p class="modified">
-        <time :datetime="modified">{{ humanTime() }}</time>
-      </p>
-    </div>
-  </div>
+    <!-- Mosaic Gallery View Rendering -->
+    <template v-else>
+      <figure class="h-full w-full">
+        <img
+          v-if="!readOnly && type === 'image' && isThumbsEnabled"
+          v-lazy="thumbnailUrl"
+          class="w-full h-full object-cover"
+        />
+        <div
+          v-else
+          class="w-full h-full bg-base-200 flex items-center justify-center"
+        >
+          <i
+            class="material-icons text-7xl"
+            :class="isDir ? 'text-primary' : 'text-base-content/30'"
+          ></i>
+        </div>
+      </figure>
+      <div
+        class="card-body justify-end p-4 bg-gradient-to-t from-black/80 to-transparent text-white"
+      >
+        <h3
+          class="card-title text-sm font-medium truncate block w-full"
+          :title="name"
+        >
+          {{ name }}
+        </h3>
+      </div>
+    </template>
+  </component>
 </template>
 
 <script setup lang="ts">
@@ -85,6 +190,13 @@ const layoutStore = useLayoutStore();
 
 const singleClick = computed(
   () => !props.readOnly && authStore.user?.singleClick
+);
+
+const isListView = computed(
+  () => (authStore.user?.viewMode ?? "list") === "list"
+);
+const isMosaicGallery = computed(
+  () => authStore.user?.viewMode === "mosaic gallery"
 );
 const isSelected = computed(
   () => fileStore.selected.indexOf(props.index) !== -1
